@@ -13,7 +13,6 @@ VehicleController::VehicleController(ros::NodeHandle& nodeHandle)
     state_pub_ = nodeHandle_.advertise<vehicle_controller::VehicleState>("vehicle/state", 1);
     odom_pub_ = nodeHandle_.advertise<nav_msgs::Odometry>("vehicle/odom", 1);
     calib_server_ = nodeHandle_.advertiseService("vehicle/calibration", &VehicleController::calibrationCallback, this);
-    
     nodeHandle_.getParam("vehicle_controller/wheel_data/wheels_name", wheels_name_);
 
     for(auto it=wheels_name_.begin(); it!=wheels_name_.end(); ++it)
@@ -59,7 +58,7 @@ void VehicleController::initKinematicsData()
     }
 }
 
-bool VehicleController::calibrationCallback(vehicle_controller::Calibration::Request &req, 
+bool VehicleController::calibrationCallback(vehicle_controller::Calibration::Request &req,
                                             vehicle_controller::Calibration::Response &res)
 {
     kinematics_data_.position[0] = req.pos_x;
@@ -108,7 +107,7 @@ void VehicleController::joysticMsgCallback(const sensor_msgs::Joy::ConstPtr& msg
         kinematics_data_.angular_velocity_cmd = (msg->axes[3] > 0.2) ? msg->axes[3] - 0.2 : (msg->axes[3] < -0.2) ? msg->axes[3] + 0.2 : 0;
         this->ensureCmdLimit();
     }
-    
+
     kinematics.inverseKinematics(kinematics_data_);
 
     for(auto it=kinematics_data_.wheel_data.begin(); it!=kinematics_data_.wheel_data.end(); it++)

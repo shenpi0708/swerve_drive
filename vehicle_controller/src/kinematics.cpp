@@ -12,7 +12,7 @@ VehicleKinematics::~VehicleKinematics()
 {
 }
 
-bool VehicleKinematics::forwardKinematics(KinematicsData &kinematics_data)
+void VehicleKinematics::forwardKinematics(KinematicsData &kinematics_data)
 {
     double ang_vel = 0; double dir_x = 0; double dir_y = 0;
     double ang_vel_cnt = 0; double dir_cnt = 0;
@@ -65,7 +65,7 @@ bool VehicleKinematics::forwardKinematics(KinematicsData &kinematics_data)
     kinematics_data.direction[1] = dir_y / dir_cnt;
 }
 
-bool VehicleKinematics::inverseKinematics(KinematicsData &kinematics_data)
+void VehicleKinematics::inverseKinematics(KinematicsData &kinematics_data)
 {
     for (auto it = kinematics_data.wheel_data.begin() ; it != kinematics_data.wheel_data.end(); ++it)
     {

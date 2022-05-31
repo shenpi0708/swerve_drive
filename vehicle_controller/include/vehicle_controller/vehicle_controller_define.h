@@ -10,7 +10,7 @@ namespace vehicle_controller
 {
 typedef double Double2[2];
 
-typedef struct 
+typedef struct
 {
 public:
     std::string wheel_name;
@@ -19,7 +19,7 @@ public:
     Double2     pos_on_vehicle;
 } WheelData;
 
-typedef struct 
+typedef struct
 {
 public:
     Double2   position;
