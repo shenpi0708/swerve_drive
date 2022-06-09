@@ -21,8 +21,8 @@ run files
 
 need to be improved
     1. The direction of wheeld velocity on the left side is opposite in real world robot
-    2. /vehicle/cmd is a little be weird, /test_cmd_Vel is ok, but it's a python file
-    3. /vehicle/odom is weird
+    2. /vehicle/cmd is a little be weird, /vehicle/cmd_new is ok, but it's a python file
+    3. /vehicle/odom is weird, /vehicle/odom_new is ok, but it's a python file
     4. motor feedback is not working in gazebo
 
 

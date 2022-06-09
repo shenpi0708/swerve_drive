@@ -105,7 +105,7 @@ def main():
     lr_angle_pub = rospy.Publisher('/lr_wheel/swerve_controller/command', Float64, queue_size=1)
     rr_v_pub = rospy.Publisher('/rr_wheel/wheel_controller/command', Float64, queue_size=1)
     rr_angle_pub = rospy.Publisher('/rr_wheel/swerve_controller/command', Float64, queue_size=1)
-    rospy.Subscriber("/test_cmd_Vel", Twist, Sub_cmd_Vel)
+    rospy.Subscriber("/vehicle/cmd_new", Twist, Sub_cmd_Vel)
     rospy.init_node('kinematic', anonymous=True)
     rate = rospy.Rate(20) # 10hz
     while not rospy.is_shutdown():

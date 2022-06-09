@@ -8,7 +8,7 @@ ros.on('connection', function() {
 
 var pub_cmdVel = new ROSLIB.Topic({
     ros : ros,
-    name : '/test_cmd_Vel',
+    name : '/vehicle/cmd_new',
     messageType : 'geometry_msgs/Twist'
 });
 

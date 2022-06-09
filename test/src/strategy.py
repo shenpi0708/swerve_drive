@@ -27,7 +27,7 @@ def Set_Odom(msg):
                                                                         msg.pose.pose.orientation.z,
                                                                         msg.pose.pose.orientation.w])
 
-    print(pos[0],pos[1],front*180 / math.pi)
+    print(round(pos[0],3),round(pos[1],3),round(front*180/math.pi,3))
 
 
 
