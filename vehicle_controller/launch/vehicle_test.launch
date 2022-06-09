@@ -1,0 +1,69 @@
+<launch>
+    <arg name="sim"           default="false"/>
+    <arg name="wheel_reverse" default="false"/>
+    <arg name="dir_acc_max"   default="1"/>
+    <arg name="ang_acc_max"   default="1"/>
+    <arg name="id_list"       default="[1, 2, 3, 4, 5, 6, 7, 8]"/>
+    <arg name="pos_list"      default="[1, 3, 5, 7]"/>
+    <arg name="vel_list"      default="[2, 4, 6, 8]"/>
+
+    <include file="$(find maxon_epos2)/launch/maxon_epos2.launch" unless="$(arg sim)">
+        <arg name="id_list"          value="$(arg id_list)"/>
+        <arg name="pos_list"         value="$(arg pos_list)"/>
+        <arg name="vel_list"         value="$(arg vel_list)"/>
+    </include>
+
+    <group ns="lf_wheel">
+        <include file="$(find wheel_controller)/launch/wheel_control.launch">
+            <arg name="sim"           value="$(arg sim)"/>
+            <arg name="wheel_name"    value="lf_wheel"/>
+            <arg name="swerve_id"     value="3"/>
+            <arg name="wheel_id"      value="4"/>
+            <arg name="wheel_reverse" value="true" unless="$(arg sim)"/>
+        </include>
+    </group>
+    <group ns="rf_wheel">
+        <include file="$(find wheel_controller)/launch/wheel_control.launch">
+            <arg name="sim"          value="$(arg sim)"/>
+            <arg name="wheel_name"   value="rf_wheel"/>
+            <arg name="swerve_id"    value="1"/>
+            <arg name="wheel_id"     value="2"/>
+        </include>
+    </group>
+    <group ns="rr_wheel">
+        <include file="$(find wheel_controller)/launch/wheel_control.launch">
+            <arg name="sim"          value="$(arg sim)"/>
+            <arg name="wheel_name"   value="rr_wheel"/>
+            <arg name="swerve_id"    value="7"/>
+            <arg name="wheel_id"     value="8"/>
+        </include>
+    </group>
+    <group ns="lr_wheel">
+        <include file="$(find wheel_controller)/launch/wheel_control.launch">
+            <arg name="sim"          value="$(arg sim)"/>
+            <arg name="wheel_name"   value="lr_wheel"/>
+            <arg name="swerve_id"    value="5"/>
+            <arg name="wheel_id"     value="6"/>
+            <arg name="wheel_reverse" value="true" unless="$(arg sim)"/>
+        </include>
+    </group>
+
+    <node name="vehicle_controller" pkg="vehicle_controller" type="vehicle_controller_node" output="screen">
+        <rosparam command="load" file="$(find vehicle_controller)/config/wheel_data.yaml" />
+    </node>
+
+    <include file="$(find swerve_drive_description)/launch/gazebo.launch" if="$(arg sim)"/>
+
+    <node pkg="joy" type="joy_node" name="joystick" output="screen">
+        <param name="joy_node/dev" value="/dev/input/js0"/>
+    </node>
+
+    <!-- rosbridge_websocket -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
+        <arg name="port" value="9090"/>
+    </include>
+
+    <!-- run new kinematic  add by Xian -->
+    <!-- <node pkg="test" name="kinematic.py" type="test_kinematic.py" output="screen"></node> -->
+
+</launch>

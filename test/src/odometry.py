@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 # license removed for brevity
-import imp
 import rospy
 import math
 from std_msgs.msg import Float64
-from geometry_msgs.msg import Twist
+import tf
+from nav_msgs.msg import Odometry
+from geometry_msgs.msg import *
+from tf.msg import *
+from sensor_msgs.msg import *
+
+
 
 robot_width = 0.36
 robot_length = 0.535
@@ -13,56 +18,22 @@ xx = 0
 yy = 0
 zz = 0
 
-def Sub_cmd_Vel(msg):
-    global xx, yy, zz
-    xx = msg.linear.x
-    yy = msg.linear.y
-    zz = msg.angular.z
+pos = [0,0]
+front = 0
 
-def Pub_lf_angle(topic, z):
-    data = Float64()
-    data.data = z
-    topic.publish(data)
+lf_angle = 0.0
+lf_velocity = 0.0
+lr_angle = 0.0
+lr_velocity = 0.0
+rf_angle = 0.0
+rf_velocity = 0.0
+rr_angle = 0.0
+rr_velocity = 0.0
 
-def Pub_lf_v(topic, x):
-    data = Float64()
-    data.data = -x
-    topic.publish(data)
-
-def Pub_rf_angle(topic, z):
-    data = Float64()
-    data.data = z
-    topic.publish(data)
-
-def Pub_rf_v(topic, x):
-    data = Float64()
-    data.data = x
-    topic.publish(data)
-
-def Pub_lr_angle(topic, z):
-    data = Float64()
-    data.data = z
-    topic.publish(data)
-    topic.publish(data)
-
-def Pub_lr_v(topic, x):
-    data = Float64()
-    data.data = -x
-    topic.publish(data)
-
-def Pub_rr_angle(topic, z):
-    data = Float64()
-    data.data = z
-    topic.publish(data)
-
-def Pub_rr_v(topic, x):
-    data = Float64()
-    data.data = x
-    topic.publish(data)
 
 def Inverse_kinematic(Vx,Vy,Wp):
     # angle unit radian
-    print (Vx,Vy,Wp)
+    # print (Vx,Vy,Wp)
     L = robot_length
     W = robot_width
     alpha = math.atan(W/L)
@@ -100,28 +71,57 @@ def Inverse_kinematic(Vx,Vy,Wp):
 
     return V1, A1, V2, A2, V3, A3, V4, A4
 
+
+
+def Sub_lf_joint(msg):
+    global lf_angle, lf_velocity
+    lf_angle = msg.position[0]
+    lf_velocity = -msg.velocity[1]
+    print("lf",lf_angle*180/math.pi,lf_velocity)
+
+def Sub_rf_joint(msg):
+    global rf_angle, rf_velocity
+    rf_angle = msg.position[0]
+    rf_velocity = msg.velocity[1]
+    print("rf",rf_angle*180/math.pi,rf_velocity)
+
+def Sub_lr_joint(msg):
+    global lr_angle, lr_velocity
+    lr_angle = msg.position[0]
+    lr_velocity = -msg.velocity[1]
+    print("lr",lr_angle*180/math.pi,lr_velocity)
+
+def Sub_rr_joint(msg):
+    global rr_angle, rr_velocity
+    rr_angle = msg.position[0]
+    rr_velocity = msg.velocity[1]
+    print("rr",rr_angle*180/math.pi,rr_velocity)
+
+
+
 def main():
-    lf_v_pub = rospy.Publisher('/lf_wheel/wheel_controller/command', Float64, queue_size=1)
-    lf_angle_pub = rospy.Publisher('/lf_wheel/swerve_controller/command', Float64, queue_size=1)
-    rf_v_pub = rospy.Publisher('/rf_wheel/wheel_controller/command', Float64, queue_size=1)
-    rf_angle_pub = rospy.Publisher('/rf_wheel/swerve_controller/command', Float64, queue_size=1)
-    lr_v_pub = rospy.Publisher('/lr_wheel/wheel_controller/command', Float64, queue_size=1)
-    lr_angle_pub = rospy.Publisher('/lr_wheel/swerve_controller/command', Float64, queue_size=1)
-    rr_v_pub = rospy.Publisher('/rr_wheel/wheel_controller/command', Float64, queue_size=1)
-    rr_angle_pub = rospy.Publisher('/rr_wheel/swerve_controller/command', Float64, queue_size=1)
-    rospy.Subscriber("test_cmd_Vel", Twist, Sub_cmd_Vel)
+
+    rospy.Subscriber("/lf_wheel/joint_states", JointState, Sub_lf_joint)
+    rospy.Subscriber("/rf_wheel/joint_states", JointState, Sub_rf_joint)
+    rospy.Subscriber("/lr_wheel/joint_states", JointState, Sub_lr_joint)
+    rospy.Subscriber("/rr_wheel/joint_states", JointState, Sub_rr_joint)
+    
+
+
+
+
     rospy.init_node('talker', anonymous=True)
     rate = rospy.Rate(20) # 10hz
     while not rospy.is_shutdown():
-        V1, A1, V2, A2, V3, A3, V4, A4 = Inverse_kinematic(xx, yy, zz)
-        Pub_lf_angle(lf_angle_pub, A1)
-        Pub_lf_v(lf_v_pub, V1)
-        Pub_lr_angle(lr_angle_pub, A2)
-        Pub_lr_v(lr_v_pub, V2)
-        Pub_rr_angle(rr_angle_pub, A3)
-        Pub_rr_v(rr_v_pub, V3)
-        Pub_rf_angle(rf_angle_pub, A4)
-        Pub_rf_v(rf_v_pub, V4)
+        # V1, A1, V2, A2, V3, A3, V4, A4 = Inverse_kinematic(xx, yy, zz)
+        # Pub_lf_angle(lf_angle_pub, A1)
+        # Pub_lf_v(lf_v_pub, V1)
+        # Pub_lr_angle(lr_angle_pub, A2)
+        # Pub_lr_v(lr_v_pub, V2)
+        # Pub_rr_angle(rr_angle_pub, A3)
+        # Pub_rr_v(rr_v_pub, V3)
+        # Pub_rf_angle(rf_angle_pub, A4)
+        # Pub_rf_v(rf_v_pub, V4)
         rate.sleep()
 
 if __name__ == '__main__':

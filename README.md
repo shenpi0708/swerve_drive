@@ -13,5 +13,6 @@ $ killall gzserver
 $ killall gzclient
 $ roslaunch vehicle_controller vehicle_controller.launch sim:=true
 
-
+Xian launch
+$ roslaunch vehicle_controller vehicle_test.launch
 
