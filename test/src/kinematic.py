@@ -20,20 +20,6 @@ pos = [0,0]
 front = 0
 
 
-def Rad2Deg(angle):  # radius to degree
-    return angle * 180 / math.pi
-
-def Set_Odom(msg):
-    global pos,front
-    pos = [msg.pose.pose.position.x, msg.pose.pose.position.y]
-    # quaternion to euler
-    (Alpha, Beta, Gamma) = tf.transformations.euler_from_quaternion([msg.pose.pose.orientation.x,
-                                                                        msg.pose.pose.orientation.y,
-                                                                        msg.pose.pose.orientation.z,
-                                                                        msg.pose.pose.orientation.w])
-    front = Rad2Deg(Gamma)
-    # print(pos[0],pos[1],front)
-
 def Sub_cmd_Vel(msg):
     global xx, yy, zz
     xx = msg.linear.x
@@ -102,23 +88,11 @@ def Inverse_kinematic(Vx,Vy,Wp):
         A2 = math.atan((Vy-L*Wp/2)/(Vx-W*Wp/2))
         A3 = math.atan((Vy-L*Wp/2)/(Vx+W*Wp/2))
         A4 = math.atan((Vy+L*Wp/2)/(Vx+W*Wp/2))
-        # V1 = Vx*math.cos(A1)+Vy*math.sin(A1)+Wp*math.sqrt(W*W+L*L)/2*math.sin(-A1)
-        # V2 = Vx*math.cos(A2)+Vy*math.sin(A2)+Wp*math.sqrt(W*W+L*L)/2*math.sin(+A2)
-        # V3 = Vx*math.cos(A3)+Vy*math.sin(A3)-Wp*math.sqrt(W*W+L*L)/2*math.sin(-A3)
-        # V4 = Vx*math.cos(A4)+Vy*math.sin(A4)-Wp*math.sqrt(W*W+L*L)/2*math.sin(+A4)
 
         V1 = Vx*math.cos(A1)+Vy*math.sin(A1)+Wp*math.sqrt(W*W+L*L)/2*math.cos(1*math.pi/2+alpha-A1)
         V2 = Vx*math.cos(A2)+Vy*math.sin(A2)+Wp*math.sqrt(W*W+L*L)/2*math.cos(2*math.pi/2+beta-A2)
         V3 = Vx*math.cos(A3)+Vy*math.sin(A3)+Wp*math.sqrt(W*W+L*L)/2*math.cos(3*math.pi/2+alpha-A3)
         V4 = Vx*math.cos(A4)+Vy*math.sin(A4)+Wp*math.sqrt(W*W+L*L)/2*math.cos(0*math.pi/2+beta-A4)
-
-        # theta = theta2 = 0
-        # w = Wp
-        # r = math.sqrt(W*W+L*L)/2
-        # V1=math.sin(A1-theta)+math.cos(A1+theta)+w*r*math.sin(theta2-A1)
-        # V2=math.sin(A2-theta)+math.cos(A2+theta)+w*r*math.sin(theta2+A2)
-        # V3=math.sin(A3-theta)+math.cos(A3+theta)-w*r*math.sin(theta2-A3)
-        # V4=math.sin(A4-theta)+math.cos(A4+theta)-w*r*math.sin(theta2+A4)
 
     return V1, A1, V2, A2, V3, A3, V4, A4
 
@@ -132,8 +106,7 @@ def main():
     rr_v_pub = rospy.Publisher('/rr_wheel/wheel_controller/command', Float64, queue_size=1)
     rr_angle_pub = rospy.Publisher('/rr_wheel/swerve_controller/command', Float64, queue_size=1)
     rospy.Subscriber("/test_cmd_Vel", Twist, Sub_cmd_Vel)
-    rospy.Subscriber("/vehicle/odom", Odometry, Set_Odom)
-    rospy.init_node('talker', anonymous=True)
+    rospy.init_node('kinematic', anonymous=True)
     rate = rospy.Rate(20) # 10hz
     while not rospy.is_shutdown():
         V1, A1, V2, A2, V3, A3, V4, A4 = Inverse_kinematic(xx, yy, zz)
