@@ -64,7 +64,7 @@
     </include>
 
     <!-- run new kinematic  add by Xian -->
-    <node pkg="test" name="kinematic.py" type="kinematic.py" ></node>
+    <!-- <node pkg="test" name="kinematic.py" type="kinematic.py" ></node> -->
 
     <!-- run new odometry  add by Xian -->
     <!-- <node pkg="test" name="odometry.py" type="odometry.py" ></node> -->

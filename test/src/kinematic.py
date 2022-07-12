@@ -96,6 +96,18 @@ def Inverse_kinematic(Vx,Vy,Wp):
 
     return V1, A1, V2, A2, V3, A3, V4, A4
 
+def record_and_adjust(v,a,ar):
+    if(a*ar<0 and abs(a-ar)>math.pi/2):
+        if(a>0):
+            a = a-math.pi
+        else:
+            a = a+math.pi
+        v = -v
+
+    ar = a
+
+    return v,a,ar
+
 def main():
     lf_v_pub = rospy.Publisher('/lf_wheel/wheel_controller/command', Float64, queue_size=1)
     lf_angle_pub = rospy.Publisher('/lf_wheel/swerve_controller/command', Float64, queue_size=1)
@@ -108,8 +120,22 @@ def main():
     rospy.Subscriber("/vehicle/cmd_new", Twist, Sub_cmd_Vel)
     rospy.init_node('kinematic', anonymous=True)
     rate = rospy.Rate(20) # 10hz
+
+    record_a1 = 0
+    record_a2 = 0
+    record_a3 = 0
+    record_a4 = 0
+
     while not rospy.is_shutdown():
         V1, A1, V2, A2, V3, A3, V4, A4 = Inverse_kinematic(xx, yy, zz)
+
+        # print(A1*180/math.pi, record_a1*180/math.pi)
+
+        V1, A1, record_a1 = record_and_adjust(V1,A1,record_a1)
+        V2, A2, record_a2 = record_and_adjust(V2,A2,record_a2)
+        V3, A3, record_a3 = record_and_adjust(V3,A3,record_a3)
+        V4, A4, record_a4 = record_and_adjust(V4,A4,record_a4)
+
         Pub_lf_angle(lf_angle_pub, A1)
         Pub_lf_v(lf_v_pub, V1)
         Pub_lr_angle(lr_angle_pub, A2)
@@ -118,6 +144,8 @@ def main():
         Pub_rr_v(rr_v_pub, V3)
         Pub_rf_angle(rf_angle_pub, A4)
         Pub_rf_v(rf_v_pub, V4)
+
+        # print(A1*180/math.pi,A2*180/math.pi,A3*180/math.pi,A4*180/math.pi)
         rate.sleep()
 
 if __name__ == '__main__':

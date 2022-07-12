@@ -7,7 +7,7 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import *
 from geometry_msgs.msg import *
 
-ros_hz = 20
+ros_hz = 40
 odom_xy_param = 1*0.77/10.286
 odom_z_param = 181.3659855/10000
 
@@ -116,8 +116,8 @@ def integral_speed(vx, vy, vz):
 
     # compute odometry in a typical way given the velocities of the robot
     dt = (current_time - last_time).to_sec()
-    delta_x = (vx * math.cos(vz) - vy * math.sin(vz)) * dt
-    delta_y = (vx * math.sin(vz) + vy * math.cos(vz)) * dt
+    delta_x = (vx * math.cos(sum_z) - vy * math.sin(sum_z)) * dt
+    delta_y = (vx * math.sin(sum_z) + vy * math.cos(sum_z)) * dt
     delta_th = vz * dt
 
     sum_x += delta_x

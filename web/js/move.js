@@ -1,5 +1,7 @@
 
-var speed = 0.5;
+var speed = 20;
+var x_param = 0.05;
+var y_param = 0.1;
 var web_control = true;
 var twist = new ROSLIB.Message({
     linear : {
@@ -100,14 +102,14 @@ function movement(data){
 
         twist = new ROSLIB.Message({
             linear : {
-            x : 1*x_speed*speed,
-            y : 1*y_speed*speed,
+            x : 1*x_speed*speed*x_param,
+            y : 1*y_speed*speed*x_param,
             z : 0.0
             },
             angular : {
             x : 0.0,
             y : 0.0,
-            z : 1*z_speed*speed
+            z : 1*z_speed*speed*y_param
             }
         });
         pub_cmdVel.publish(twist)
