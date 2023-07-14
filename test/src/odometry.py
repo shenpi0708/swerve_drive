@@ -7,7 +7,7 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import *
 from geometry_msgs.msg import *
 
-ros_hz = 40
+ros_hz = 10
 odom_xy_param = 1*0.77/10.286
 odom_z_param = 181.3659855/10000
 
@@ -68,20 +68,20 @@ def Pub_odom(vx,vy,vz,px,py,pz,topic):
         (px, py, 0.),
         odom_quat,
         current_time,
-        "map",
-        "/vehicle/odom_new"
+        "base_link_m",
+        "odom"
     )
 
     # next, we'll publish the odometry message over ROS
     odom = Odometry()
     odom.header.stamp = current_time
-    odom.header.frame_id = "/vehicle/odom_new"
+    odom.header.frame_id = "odom"
 
     # set the position
     odom.pose.pose = Pose(Point(px, py, 0.), Quaternion(*odom_quat))
 
     # set the velocity
-    odom.child_frame_id = "map"
+    odom.child_frame_id = "base_link_m"
     odom.twist.twist = Twist(Vector3(vx, vy, 0), Vector3(0, 0, vz))
 
     # publish the message

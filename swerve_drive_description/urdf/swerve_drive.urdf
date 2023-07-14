@@ -5,7 +5,7 @@
 <robot
   name="swerve_drive">
   <link
-    name="base_link">
+    name="base_link_m">
     <inertial>
       <origin
         xyz="-0.073441 0.0048344 0.14539"
@@ -91,7 +91,7 @@
       xyz="0.24858 0.17929 0.096509"
       rpy="0 0 0" />
     <parent
-      link="base_link" />
+      link="base_link_m" />
     <child
       link="lf_swerve_link" />
     <axis
@@ -197,7 +197,7 @@
       xyz="0.24858 -0.18071 0.096509"
       rpy="0 0 0" />
     <parent
-      link="base_link" />
+      link="base_link_m" />
     <child
       link="rf_swerve_link" />
     <axis
@@ -303,7 +303,7 @@
       xyz="-0.28642 -0.18071 0.096509"
       rpy="0 0 0" />
     <parent
-      link="base_link" />
+      link="base_link_m" />
     <child
       link="rr_swerve_link" />
     <axis
@@ -409,7 +409,7 @@
       xyz="-0.28642 0.17929 0.096509"
       rpy="0 0 0" />
     <parent
-      link="base_link" />
+      link="base_link_m" />
     <child
       link="lr_swerve_link" />
     <axis

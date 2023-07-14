@@ -48,9 +48,9 @@
         </include>
     </group>
 
-    <node name="vehicle_controller" pkg="vehicle_controller" type="vehicle_controller_node" output="screen">
+    <!-- <node name="vehicle_controller" pkg="vehicle_controller" type="vehicle_controller_node" output="screen">
         <rosparam command="load" file="$(find vehicle_controller)/config/wheel_data.yaml" />
-    </node>
+    </node> -->
 
     <include file="$(find swerve_drive_description)/launch/gazebo.launch" if="$(arg sim)"/>
 
@@ -59,14 +59,14 @@
     </node>
 
     <!-- rosbridge_websocket -->
-    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
+    <!-- <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
         <arg name="port" value="9090"/>
-    </include>
+    </include> -->
 
     <!-- run new kinematic  add by Xian -->
-    <!-- <node pkg="test" name="kinematic.py" type="kinematic.py" ></node> -->
+    <node pkg="test" name="kinematic.py" type="kinematic.py" ></node>
 
     <!-- run new odometry  add by Xian -->
-    <!-- <node pkg="test" name="odometry.py" type="odometry.py" ></node> -->
+    <node pkg="test" name="odometry.py" type="odometry.py" ></node>
 
 </launch>

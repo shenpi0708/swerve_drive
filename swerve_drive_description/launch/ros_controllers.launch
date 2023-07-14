@@ -16,5 +16,5 @@
                 rr_wheel/wheel_controller
                 lr_wheel/wheel_controller"/>
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="robot_state_pub" pkg="robot_state_publisher" type="robot_state_publisher" />
 </launch>

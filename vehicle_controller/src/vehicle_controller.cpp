@@ -166,7 +166,7 @@ void VehicleController::vehicleStatePublish()
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(kinematics_data_.rotation);
     odom_trans.header.stamp = curr_time;
     odom_trans.header.frame_id = "odom";
-    odom_trans.child_frame_id = "base_link";
+    odom_trans.child_frame_id = "base_link_m";
 
     odom_trans.transform.translation.x = kinematics_data_.position[0];
     odom_trans.transform.translation.y = kinematics_data_.position[1];
@@ -185,7 +185,7 @@ void VehicleController::vehicleStatePublish()
     odom.pose.pose.orientation = odom_quat;
 
     //set the velocity
-    odom.child_frame_id = "base_link";
+    odom.child_frame_id = "base_link_m";
     odom.twist.twist.linear.x = kinematics_data_.direction[0];
     odom.twist.twist.linear.y = kinematics_data_.direction[1];
     odom.twist.twist.angular.z = kinematics_data_.angular_velocity;

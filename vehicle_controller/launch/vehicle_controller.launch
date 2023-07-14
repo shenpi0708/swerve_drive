@@ -52,7 +52,7 @@
         <rosparam command="load" file="$(find vehicle_controller)/config/wheel_data.yaml" />
     </node>
 
-    <include file="$(find swerve_drive_description)/launch/gazebo.launch" if="$(arg sim)"/>
+    <!--include file="$(find swerve_drive_description)/launch/gazebo.launch" if="$(arg sim)"/-->
 
     <node pkg="joy" type="joy_node" name="joystick" output="screen">
         <param name="joy_node/dev" value="/dev/input/js0"/>
